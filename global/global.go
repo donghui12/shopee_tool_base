@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/shopee_tool_base/pkg/logger"
+	"github.com/donghui12/shopee_tool_base/pkg/logger"
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

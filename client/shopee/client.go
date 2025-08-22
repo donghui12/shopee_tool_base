@@ -21,9 +21,9 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
-	"github.com/shopee_tool_base/pkg/constant"
-	"github.com/shopee_tool_base/pkg/logger"
-	"github.com/shopee_tool_base/pkg/pool"
+	"github.com/donghui12/shopee_tool_base/pkg/constant"
+	"github.com/donghui12/shopee_tool_base/pkg/logger"
+	"github.com/donghui12/shopee_tool_base/pkg/pool"
 )
 
 var (
@@ -76,7 +76,7 @@ func InitShopeeClient() {
 			MaxIdleConnsPerHost: 10,
 			IdleConnTimeout:     90 * time.Second,
 		}
-		
+
 		shopeeClientForTw = &Client{
 			baseURL: BaseSellerURLForTw,
 			httpClient: &http.Client{
@@ -88,7 +88,7 @@ func InitShopeeClient() {
 			retryDelay: 2 * time.Second,
 			timeout:    30 * time.Second,
 		}
-		
+
 		shopeeClient = &Client{
 			baseURL: BaseSellerURL,
 			httpClient: &http.Client{
@@ -120,7 +120,7 @@ func (c *Client) Login(account, password, vcode, loginType string) (string, erro
 	if account == "" || password == "" {
 		return "", fmt.Errorf("账号或密码不能为空")
 	}
-	
+
 	cookieString := ""
 	// 构建表单数据
 	loginParam := LoginParam{
@@ -226,7 +226,7 @@ func (c *Client) GetMerchantShopList(cookies string) ([]MerchantShop, error) {
 	if cookies == "" {
 		return nil, fmt.Errorf("cookies不能为空")
 	}
-	
+
 	merchantShopListResp := &MerchantShopListResponse{}
 	resp, err := c.doRequest(HTTPMethodGet, APIPathGetMerchantShopList, nil, cookies)
 	if err != nil {
@@ -252,7 +252,7 @@ func (c *Client) GetProductList(cookies, shopID, region, listType string) ([]int
 	if cookies == "" || shopID == "" || region == "" {
 		return nil, fmt.Errorf("参数不能为空: cookies=%s, shopID=%s, region=%s", cookies, shopID, region)
 	}
-	
+
 	var productIDs []int64
 	var productIDMap sync.Map
 	var wg sync.WaitGroup

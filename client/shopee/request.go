@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/donghui12/shopee_tool_base/pkg/logger"
 	"go.uber.org/zap"
-	"github.com/shopee_tool_base/pkg/logger"
 )
 
 // RequestOption 请求配置选项
@@ -18,12 +18,12 @@ type RequestOption func(*RequestConfig)
 
 // RequestConfig 请求配置
 type RequestConfig struct {
-	Headers       map[string]string
-	Timeout       time.Duration
-	RetryTimes    int
-	RetryDelay    time.Duration
-	UseProxy      bool
-	SkipErrorLog  bool
+	Headers      map[string]string
+	Timeout      time.Duration
+	RetryTimes   int
+	RetryDelay   time.Duration
+	UseProxy     bool
+	SkipErrorLog bool
 }
 
 // WithHeaders 设置请求头
@@ -84,7 +84,7 @@ func (rm *RequestManager) DoRequest(ctx context.Context, method, path string, re
 		RetryTimes: rm.client.retryTimes,
 		RetryDelay: rm.client.retryDelay,
 	}
-	
+
 	for _, opt := range opts {
 		opt(config)
 	}

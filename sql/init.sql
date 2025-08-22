@@ -1,5 +1,5 @@
 -- 初始化数据库表结构
--- shopee_tool_base 项目所需的所有表
+-- github.com/donghui12/shopee_tool_base 项目所需的所有表
 
 -- 创建 account 表
 CREATE TABLE IF NOT EXISTS `account` (

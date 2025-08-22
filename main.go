@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/shopee_tool_base/client/shopee"
-	"github.com/shopee_tool_base/global"
+	"github.com/donghui12/shopee_tool_base/client/shopee"
+	"github.com/donghui12/shopee_tool_base/global"
 )
 
 func main() {
@@ -22,7 +22,7 @@ func main() {
 	fmt.Println("Shopee Tool Base 已启动")
 	fmt.Println("使用以下功能:")
 	fmt.Println("1. 商品管理")
-	fmt.Println("2. 店铺管理") 
+	fmt.Println("2. 店铺管理")
 	fmt.Println("3. 折扣管理")
 	fmt.Println("4. 账号管理")
 

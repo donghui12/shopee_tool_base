@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shopee_tool_base/pkg/logger"
-	"github.com/shopee_tool_base/pkg/pool"
+	"github.com/donghui12/shopee_tool_base/pkg/logger"
+	"github.com/donghui12/shopee_tool_base/pkg/pool"
 
 	"go.uber.org/zap"
 )

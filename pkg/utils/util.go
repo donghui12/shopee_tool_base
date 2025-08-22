@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/shopee_tool_base/pkg/logger"
+	"github.com/donghui12/shopee_tool_base/pkg/logger"
 
 	"go.uber.org/zap"
 )

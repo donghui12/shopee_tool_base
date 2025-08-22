@@ -2,7 +2,7 @@
 
 ## 项目概述
 
-本次优化对 `shopee_tool_base` 项目中的 Shopee client 进行了全面的模块化重构，提供了更清晰、可维护、高效的客户端实现。
+本次优化对 `github.com/donghui12/shopee_tool_base` 项目中的 Shopee client 进行了全面的模块化重构，提供了更清晰、可维护、高效的客户端实现。
 
 ## 优化成果
 

@@ -3,8 +3,8 @@ package model
 import (
 	"time"
 
-	"github.com/shopee_tool_base/consts"
-	"github.com/shopee_tool_base/global"
+	"github.com/donghui12/shopee_tool_base/consts"
+	"github.com/donghui12/shopee_tool_base/global"
 )
 
 type Shop struct {

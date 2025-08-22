@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/shopee_tool_base/pkg/constant"
-	"github.com/shopee_tool_base/pkg/logger"
+	"github.com/donghui12/shopee_tool_base/pkg/constant"
+	"github.com/donghui12/shopee_tool_base/pkg/logger"
 
 	"go.uber.org/zap"
 )

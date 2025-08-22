@@ -12,9 +12,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/shopee_tool_base/pkg/constant"
-	"github.com/shopee_tool_base/pkg/logger"
-	"github.com/shopee_tool_base/pkg/proxy"
+	"github.com/donghui12/shopee_tool_base/pkg/constant"
+	"github.com/donghui12/shopee_tool_base/pkg/logger"
+	"github.com/donghui12/shopee_tool_base/pkg/proxy"
 
 	"go.uber.org/zap"
 )
