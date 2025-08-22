@@ -10,3 +10,6 @@ CREATE TABLE IF NOT EXISTS `shop` (
     KEY `idx_region` (`region`),
     KEY `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='店铺信息表';
+
+ALTER TABLE shop 
+ADD COLUMN `account_id` bigint COMMENT 'shopee account id' AFTER `id`;

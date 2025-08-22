@@ -28,6 +28,13 @@ func (r *ShopRepository) GetShopByID(shopID string) (*model.Shop, error) {
 	return &shop, err
 }
 
+// GetShopByID 根据店铺ID获取店铺
+func (r *ShopRepository) GetShopByAccountID(accountID int64) ([]model.Shop, error) {
+	var shops []model.Shop
+	err := r.db.Where("account_id = ?", accountID).Find(&shops).Error
+	return shops, err
+}
+
 // SaveOrUpdateShop 保存或更新店铺
 func (r *ShopRepository) SaveOrUpdateShop(shop *model.Shop) error {
 	return r.db.Where("shop_id = ?", shop.ShopID).
