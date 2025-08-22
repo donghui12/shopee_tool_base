@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/donghui12/shopee_tool_base/global"
 	"github.com/donghui12/shopee_tool_base/model"
 	"gorm.io/gorm"
@@ -36,4 +38,11 @@ func (r *ActiveCodeRepository) GetAllActiveCodes() ([]model.ActiveCode, error) {
 // DeleteActiveCode 删除激活码
 func (r *ActiveCodeRepository) DeleteActiveCode(id uint) error {
 	return r.db.Delete(&model.ActiveCode{}, id).Error
+}
+
+// UpdateActiveCode 更新激活码过期时间
+func (s *ActiveCodeRepository) UpdateActiveCode(code []string, expiredAt time.Time) error {
+	return s.db.Model(&model.ActiveCode{}).
+		Where("code in (?)", code).
+		Update("expired_at", expiredAt).Error
 }
