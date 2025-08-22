@@ -1,8 +1,8 @@
 package consts
 
 const (
-	DiscountTable    = "discount"
-	AccountTable     = "account"
-	ShopTable        = "shop"
-	ActiveCodeTable  = "active_code"
+	AccountTable    = "accounts"
+	ActiveCodeTable = "active_codes"
+	ShopTable       = "shop"
+	DiscountTable   = "discount"
 )
