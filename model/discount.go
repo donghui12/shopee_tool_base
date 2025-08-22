@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/donghui12/shopee_tool_base/consts"
-	"github.com/donghui12/shopee_tool_base/global"
 )
 
 type Discount struct {
@@ -22,25 +21,4 @@ type Discount struct {
 
 func (d *Discount) TableName() string {
 	return consts.DiscountTable
-}
-
-func (d *Discount) GetDiscounts(shopID string) ([]Discount, error) {
-	var discounts []Discount
-	err := global.DB.Where("shop_id = ?", shopID).
-		Find(&discounts).Error
-	return discounts, err
-}
-
-func (d *Discount) SaveOrUpdateDiscount(discount Discount) error {
-	err := global.DB.Where("discount_id = ?", d.DiscountID).
-		Assign(discount).FirstOrCreate(&discount).Error
-	return err
-}
-func (d *Discount) BatchSaveOrUpdateDiscounts(discounts []Discount) error {
-	for i := range discounts {
-		if err := d.SaveOrUpdateDiscount(discounts[i]); err != nil {
-			return err
-		}
-	}
-	return nil
 }

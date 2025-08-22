@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/donghui12/shopee_tool_base/consts"
-	"github.com/donghui12/shopee_tool_base/global"
 )
 
 // Account 存储虾皮账号信息
@@ -26,52 +25,6 @@ type Account struct {
 
 func (a *Account) TableName() string {
 	return consts.AccountTable
-}
-
-func (a *Account) GetAccountByUsername(username string) error {
-	return global.DB.Where("username = ?", username).First(&a).Error
-}
-
-func (a *Account) GetAccountByID(id uint) error {
-	return global.DB.First(&a, id).Error
-}
-
-func (a *Account) GetAccounts() ([]Account, error) {
-	var accounts []Account
-	err := global.DB.Find(&accounts).Error
-	return accounts, err
-}
-
-func (a *Account) UpdateCookies(newCookies string) error {
-	a.Cookies = newCookies
-	a.UpdatedAt = time.Now()
-	return global.DB.Save(a).Error
-}
-
-func (a *Account) UpdateSession(newSession string) error {
-	a.Session = newSession
-	a.UpdatedAt = time.Now()
-	return global.DB.Save(a).Error
-}
-
-func (a *Account) UpdateStatus(status int) error {
-	a.Status = status
-	a.UpdatedAt = time.Now()
-	return global.DB.Save(a).Error
-}
-
-func (a *Account) SaveOrUpdateAccount() error {
-	return global.DB.Where("username = ?", a.Username).
-		Assign(a).FirstOrCreate(a).Error
-}
-
-func (a *Account) BatchSaveOrUpdateAccounts(accounts []Account) error {
-	for _, account := range accounts {
-		if err := account.SaveOrUpdateAccount(); err != nil {
-			return err
-		}
-	}
-	return nil
 }
 
 // ActiveCode 激活码模型
