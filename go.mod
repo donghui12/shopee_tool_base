@@ -1,4 +1,4 @@
-module github.com/shopee_tool_base
+module github.com/donghui12/shopee_tool_base
 
 go 1.20
 
