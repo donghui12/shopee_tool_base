@@ -9,6 +9,7 @@ const (
 	// 账户相关接口
 	APIPathLogin              = "/api/cnsc/selleraccount/login/"
 	APIPathSwitchMerchantShop = "/api/cnsc/selleraccount/switch_merchant_shop/"
+	APIPathGetSession         = "/api/cnsc/selleraccount/get_session/"
 
 	// 商品相关接口
 	APIPathUpdateProductInfo   = "/api/v3/product/update_product_info"

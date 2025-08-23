@@ -222,6 +222,36 @@ func (c *Client) GetMerchantShopListWithRegion(cookies, region string) ([]Mercha
 }
 
 // GetMerchantShopList 获取全部地区店铺列表
+func (c *Client) GetSession(cookies string) (AccountInfo, error) {
+	var accountInfo AccountInfo
+	if cookies == "" {
+		return accountInfo, fmt.Errorf("cookies不能为空")
+	}
+
+	param := CommomParam{}
+	url := APIPathGetSession + "?" + param.ToFormValues().Encode()
+
+	getSessionResp := &GetSessionResp{}
+	resp, err := c.doRequest(HTTPMethodGet, url, nil, cookies)
+	if err != nil {
+		return accountInfo, fmt.Errorf("get session failed: %w", err)
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return accountInfo, fmt.Errorf("read response body failed: %w", err)
+	}
+	err = json.Unmarshal(body, &getSessionResp)
+	if err != nil {
+		return accountInfo, fmt.Errorf("unmarshal merchant shop list response failed: %w", err)
+	}
+	if getSessionResp.Code != 0 {
+		return accountInfo, fmt.Errorf("获取账户信息列表失败:%s", getSessionResp.Message)
+	}
+	return getSessionResp.AccountInfo, nil
+}
+
+// GetMerchantShopList 获取全部地区店铺列表
 func (c *Client) GetMerchantShopList(cookies string) ([]MerchantShop, error) {
 	if cookies == "" {
 		return nil, fmt.Errorf("cookies不能为空")

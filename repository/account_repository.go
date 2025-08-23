@@ -57,6 +57,11 @@ func (r *AccountRepository) UpdateStatus(id uint, status int) error {
 	return r.db.Model(&model.Account{}).Where("id = ?", id).Update("status", status).Error
 }
 
+// UpdateStatus 更新账号状态
+func (r *AccountRepository) UpdateAccountId(id uint, accountId int64) error {
+	return r.db.Model(&model.Account{}).Where("id = ?", id).Update("account_id", accountId).Error
+}
+
 // SaveOrUpdateAccount 保存或更新账号
 func (r *AccountRepository) SaveOrUpdateAccount(account *model.Account) error {
 	return r.db.Where("username = ?", account.Username).

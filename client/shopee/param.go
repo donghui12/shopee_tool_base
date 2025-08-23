@@ -219,3 +219,16 @@ func (req *CreateDiscountReq) ConvertFromDiscount(discount Discount) {
 	}
 	req.Title = fmt.Sprintf("%s_copy_%s", baseTitle, currentTimeStr)
 }
+
+type AccountInfo struct {
+	AccountId   int64  `json:"account_id"`
+	AccountName string `json:"account_name"`
+	AccountType string `json:"account_type"`
+}
+
+// 获取 session 返回参数
+type GetSessionResp struct {
+	Code        int         `json:"code"`
+	Message     string      `json:"message"`
+	AccountInfo AccountInfo `json:"sub_account_info"`
+}
