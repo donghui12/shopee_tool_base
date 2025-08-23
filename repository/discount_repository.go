@@ -28,6 +28,13 @@ func (r *DiscountRepository) GetDiscountsByShopID(shopID string) ([]model.Discou
 	return discounts, err
 }
 
+// GetDiscountsByShopID 根据店铺ID获取有效的折扣列表
+func (r *DiscountRepository) GetDiscountsByShopIDList(shopIDList []string) ([]model.Discount, error) {
+	var discounts []model.Discount
+	err := r.db.Where("shop_id in ?", shopIDList).Find(&discounts).Error
+	return discounts, err
+}
+
 // GetAllActiveDiscounts 获取所有有效的折扣
 func (r *DiscountRepository) GetAllActiveDiscounts() ([]model.Discount, error) {
 	var discounts []model.Discount
