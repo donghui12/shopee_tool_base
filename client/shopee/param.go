@@ -229,6 +229,7 @@ type AccountInfo struct {
 // 获取 session 返回参数
 type GetSessionResp struct {
 	Code        int         `json:"code"`
+	Errcode     int         `json:"errcode"`
 	Message     string      `json:"message"`
 	AccountInfo AccountInfo `json:"sub_account_info"`
 }

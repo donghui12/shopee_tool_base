@@ -245,7 +245,7 @@ func (c *Client) GetSession(cookies string) (AccountInfo, error) {
 	if err != nil {
 		return accountInfo, fmt.Errorf("unmarshal merchant shop list response failed: %w", err)
 	}
-	if getSessionResp.Code != 0 {
+	if getSessionResp.Code != 0 || getSessionResp.Errcode != 0 {
 		return accountInfo, fmt.Errorf("获取账户信息列表失败:%s", getSessionResp.Message)
 	}
 	return getSessionResp.AccountInfo, nil
