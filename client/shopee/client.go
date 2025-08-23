@@ -1249,7 +1249,7 @@ func (c *Client) GetDiscountList(cookies, shopId, region string) ([]Discount, er
 	url := APIPathGetDiscountList + "?" + param.ToFormValues().Encode()
 
 	for i := 0; i <= 100; i++ {
-		resp, err := c.doRequestWithProxy(HTTPMethodPost, url, req, cookies)
+		resp, err := c.doRequest(HTTPMethodPost, url, req, cookies)
 		if err != nil {
 			return nil, fmt.Errorf("get discount list failed: %w", err)
 		}
