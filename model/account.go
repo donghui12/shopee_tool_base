@@ -26,16 +26,3 @@ type Account struct {
 func (a *Account) TableName() string {
 	return consts.AccountTable
 }
-
-// ActiveCode 激活码模型
-type ActiveCode struct {
-	ID        uint      `json:"id" gorm:"primaryKey"`
-	Code      string    `json:"code" gorm:"not null"`
-	ExpiredAt time.Time `json:"expired_at" gorm:"not null"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
-
-func (ac *ActiveCode) TableName() string {
-	return consts.ActiveCodeTable
-}
