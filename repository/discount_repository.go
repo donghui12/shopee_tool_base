@@ -24,7 +24,7 @@ func (r *DiscountRepository) GetDiscounts(shopID string) ([]model.Discount, erro
 // GetDiscountsByShopID 根据店铺ID获取有效的折扣列表
 func (r *DiscountRepository) GetDiscountsByShopID(shopID string) ([]model.Discount, error) {
 	var discounts []model.Discount
-	err := r.db.Where("shop_id = ? ", shopID, 1).Find(&discounts).Error
+	err := r.db.Where("shop_id = ? AND status = ?", shopID, 1).Find(&discounts).Error
 	return discounts, err
 }
 
