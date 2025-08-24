@@ -36,6 +36,34 @@ func ParseCommonResponse[T any](respBody []byte) (*T, error) {
 	return &resp.Data, nil
 }
 
+// ---------------------- 登陆店铺响应 -----------------------
+type LoginResponse struct {
+	Code           int            `json:"code"`
+	ErrCode        int            `json:"errcode"`
+	Message        string         `json:"message"`
+	UserMessage    string         `json:"user_message"`
+	SubAccountInfo SubAccountInfo `json:"sub_account_info"`
+}
+
+type SubAccountInfo struct {
+	AccountType       string `json:"account_type"`
+	AccountID         int64  `json:"account_id"`
+	TobAccountID      int64  `json:"tob_account_id"`
+	Phone             string `json:"phone"`
+	Portrait          string `json:"portrait"`
+	AccountName       string `json:"account_name"`
+	IsOverdue         bool   `json:"is_overdue"`
+	Language          string `json:"language"`
+	NickName          string `json:"nick_name"`
+	MainAccountID     int64  `json:"main_account_id"`
+	SubAccountID      int64  `json:"sub_account_id"`
+	Email             string `json:"email"`
+	MerchantName      string `json:"merchant_name"`
+	CurrentShopID     int64  `json:"current_shop_id"`
+	CurrentMerchantID int64  `json:"current_merchant_id"`
+	Cookies           string `json:"cookies"`
+}
+
 // ---------------------- 获取或设置店铺响应 -----------------------
 // LoginData 登录响应
 type LoginData struct {

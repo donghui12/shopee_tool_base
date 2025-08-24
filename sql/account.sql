@@ -19,3 +19,6 @@ CREATE TABLE IF NOT EXISTS `account` (
     KEY `idx_status` (`status`),
     KEY `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='虾皮账号信息表';
+
+ALTER TABLE `accounts`
+ADD COLUMN `merchant_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'shopee 账户' AFTER `account_id`;

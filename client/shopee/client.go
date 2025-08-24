@@ -116,9 +116,10 @@ func GetTwShopeeClient() *Client {
 }
 
 // Login 登录
-func (c *Client) Login(account, password, vcode, loginType string) (string, error) {
+func (c *Client) Login(account, password, vcode, loginType string) (SubAccountInfo, error) {
+	var accountResp SubAccountInfo
 	if account == "" || password == "" {
-		return "", fmt.Errorf("账号或密码不能为空")
+		return accountResp, fmt.Errorf("账号或密码不能为空")
 	}
 
 	cookieString := ""
@@ -146,51 +147,51 @@ func (c *Client) Login(account, password, vcode, loginType string) (string, erro
 	// 创建请求
 	req, err := http.NewRequest(HTTPMethodPost, c.baseURL+APIPathLogin, strings.NewReader(form.Encode()))
 	if err != nil {
-		return cookieString, fmt.Errorf("create login request failed: %w", err)
+		return accountResp, fmt.Errorf("create login request failed: %w", err)
 	}
 
 	// 设置表单请求头
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
 
 	// 执行请求
-	resp, err := c.executeWithProxy(req)
+	resp, err := c.executeWithLocalProxy(req)
 	if err != nil {
-		return cookieString, fmt.Errorf("login request failed: %w", err)
+		return accountResp, fmt.Errorf("login request failed: %w", err)
 	}
 	defer resp.Body.Close()
 
 	// 读取响应
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return cookieString, fmt.Errorf("read login response failed: %w", err)
+		return accountResp, fmt.Errorf("read login response failed: %w", err)
 	}
 
 	// 解析响应
-	var commonResp CommonResponse[json.RawMessage]
+	var commonResp LoginResponse
 	if err := json.Unmarshal(body, &commonResp); err != nil {
-		return cookieString, fmt.Errorf("parse login response failed: %w", err)
+		return accountResp, fmt.Errorf("parse login response failed: %w", err)
 	}
 
 	// 检查响应状态
 	if commonResp.Code != ResponseCodeSuccess {
-		return cookieString, fmt.Errorf("login failed: %s", commonResp.Message)
+		return accountResp, fmt.Errorf("login failed: %s", commonResp.Message)
 	}
 
 	if commonResp.Message == "error_server" {
-		return cookieString, fmt.Errorf("请联系管理员")
+		return accountResp, fmt.Errorf("请联系管理员")
 	}
 
 	if commonResp.Message == "error_need_vcode" {
-		return cookieString, fmt.Errorf("需要验证码")
+		return accountResp, fmt.Errorf("需要验证码")
 	}
 	if commonResp.Message == "error_invalid_vcode" {
-		return cookieString, fmt.Errorf("验证码错误")
+		return accountResp, fmt.Errorf("验证码错误")
 	}
 	if commonResp.Message == "error_name_or_password_incorrect" {
-		return cookieString, fmt.Errorf("账号或密码错误")
+		return accountResp, fmt.Errorf("账号或密码错误")
 	}
 	if commonResp.Message != "" {
-		return cookieString, fmt.Errorf(commonResp.Message)
+		return accountResp, fmt.Errorf(commonResp.Message)
 	}
 
 	cookies := resp.Header["Set-Cookie"]
@@ -203,7 +204,10 @@ func (c *Client) Login(account, password, vcode, loginType string) (string, erro
 		cookieString += cookie + "; "
 	}
 
-	return cookieString, nil
+	accountResp = commonResp.SubAccountInfo
+	accountResp.Cookies = cookieString
+
+	return accountResp, nil
 }
 
 // GetMerchantShopListWithRegion 获取某一地区店铺列表

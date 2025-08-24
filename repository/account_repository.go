@@ -4,6 +4,7 @@ import (
 	"github.com/donghui12/shopee_tool_base/global"
 	"github.com/donghui12/shopee_tool_base/model"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type AccountRepository struct {
@@ -64,8 +65,11 @@ func (r *AccountRepository) UpdateAccountId(id uint, accountId int64) error {
 
 // SaveOrUpdateAccount 保存或更新账号
 func (r *AccountRepository) SaveOrUpdateAccount(account *model.Account) error {
-	return r.db.Where("username = ?", account.Username).
-		Assign(account).FirstOrCreate(account).Error
+	return r.db.Clauses(clause.OnConflict{
+		Columns: []clause.Column{{Name: "username"}}, // 以 username 作为唯一键
+		DoUpdates: clause.AssignmentColumns([]string{"account_id", "merchant_name",
+			"password", "expired_at", "cookies", "session", "status", "updated_at"}),
+	}).Create(account).Error
 }
 
 // BatchSaveOrUpdateAccounts 批量保存或更新账号
