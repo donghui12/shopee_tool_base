@@ -212,6 +212,9 @@ func (c *Client) GetMerchantShopListWithRegion(cookies, region string) ([]Mercha
 	if err != nil {
 		return nil, err
 	}
+	if region == "" {
+		return allShopList, nil
+	}
 	var shopList []MerchantShop
 	for _, shop := range allShopList {
 		if shop.Region == region {
@@ -274,6 +277,7 @@ func (c *Client) GetMerchantShopList(cookies string) ([]MerchantShop, error) {
 	if merchantShopListResp.Error != "" {
 		return nil, fmt.Errorf("获取店铺列表失败:%s", merchantShopListResp.Error)
 	}
+	fmt.Printf("\n\nthis is shop: %+v\n", merchantShopListResp.Data.Shops)
 	return merchantShopListResp.Data.Shops, nil
 }
 
