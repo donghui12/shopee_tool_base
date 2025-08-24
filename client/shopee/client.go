@@ -1249,7 +1249,7 @@ func (c *Client) GetDiscountList(cookies, shopId, region string) ([]Discount, er
 	url := APIPathGetDiscountList + "?" + param.ToFormValues().Encode()
 
 	for i := 0; i <= 100; i++ {
-		resp, err := c.doRequest(HTTPMethodPost, url, req, cookies)
+		resp, err := c.doRequestWithLocalProxy(HTTPMethodPost, url, req, cookies)
 		if err != nil {
 			return nil, fmt.Errorf("get discount list failed: %w", err)
 		}
@@ -1424,7 +1424,36 @@ func (c *Client) doRequestWithProxy(method, path string, reqBody interface{}, co
 	req.Header.Set("Cookie", cookies)
 	c.setCommonHeaders(req)
 
-	resp, err := c.executeWithProxy(req)
+	resp, err := c.executeWithLocalProxy(req)
+	if err != nil {
+		return nil, fmt.Errorf("execute request failed: %w", err)
+	}
+
+	return resp, nil
+}
+
+func (c *Client) doRequestWithLocalProxy(method, path string, reqBody interface{}, cookies string) (*http.Response, error) {
+	url := c.baseURL + path
+
+	var bodyReader io.Reader
+	if reqBody != nil {
+		jsonData, err := json.Marshal(reqBody)
+		if err != nil {
+			return nil, fmt.Errorf("marshal request body failed: %w", err)
+		}
+		bodyReader = bytes.NewBuffer(jsonData)
+	}
+
+	req, err := http.NewRequest(method, url, bodyReader)
+	if err != nil {
+		return nil, fmt.Errorf("create request failed: %w", err)
+	}
+
+	// 设置 JSON 请求头
+	req.Header.Set("Cookie", cookies)
+	c.setCommonHeaders(req)
+
+	resp, err := c.executeWithLocalProxy(req)
 	if err != nil {
 		return nil, fmt.Errorf("execute request failed: %w", err)
 	}

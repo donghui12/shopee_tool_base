@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/donghui12/shopee_tool_base/global"
 	"github.com/donghui12/shopee_tool_base/pkg/constant"
 	"github.com/donghui12/shopee_tool_base/pkg/logger"
 	"github.com/donghui12/shopee_tool_base/pkg/proxy"
@@ -136,6 +137,33 @@ func (c *Client) executeWithProxy(req *http.Request) (*http.Response, error) {
 			Timeout: c.httpClient.Timeout,
 			Transport: &http.Transport{
 				Proxy: http.ProxyURL(proxyURL),
+			},
+		}
+		resp, err := c.httpClient.Do(req)
+		if err == nil {
+			return resp, nil
+		}
+		if i == c.retryTimes {
+			return resp, fmt.Errorf("request failed after %d retries: %w", c.retryTimes, err)
+		}
+		logger.Error("请求失败:", zap.Error(err))
+		lastErr = err
+		time.Sleep(c.retryDelay)
+	}
+
+	return resp, lastErr
+}
+
+func (c *Client) executeWithLocalProxy(req *http.Request) (*http.Response, error) {
+	var resp *http.Response
+	var lastErr error
+
+	for i := 0; i <= c.retryTimes; i++ {
+		// 使用动态代理构造新的 HTTP 客户端
+		c.httpClient = &http.Client{
+			Timeout: c.httpClient.Timeout,
+			Transport: &http.Transport{
+				Proxy: http.ProxyURL(global.ProxyURL),
 			},
 		}
 		resp, err := c.httpClient.Do(req)
