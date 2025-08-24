@@ -175,7 +175,7 @@ func (s *AccountRepository) GetSession(username string) (string, error) {
 func (s *AccountRepository) GetSessionByUsernameAndPassword(username, password string) (string, error) {
 	var session string
 	result := s.db.Model(&model.Account{}).
-		Where("username = ? AND password = ? AND updated_at >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)", username, password).
+		Where("username = ? AND password = ? AND status=1", username, password).
 		Select("session").Scan(&session)
 	return session, result.Error
 }
