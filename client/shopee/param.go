@@ -198,6 +198,7 @@ type CreateDiscountReq struct {
 
 func (req *CreateDiscountReq) ConvertFromDiscount(discount Discount) {
 	future := time.Now().AddDate(0, 1, 0) // 当前时间加1个月
+	req.StartTime = time.Now().Add(10 * time.Minute).Unix()
 	req.StartTime = time.Now().Unix()
 	req.EndTime = future.Unix()
 	req.Status = 1
