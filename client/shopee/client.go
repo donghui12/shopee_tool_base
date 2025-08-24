@@ -1572,12 +1572,6 @@ func (c *Client) doRequest(method, path string, reqBody interface{}, cookies str
 
 // doRequestWithContext 执行带上下文的请求
 func (c *Client) doRequestWithContext(ctx context.Context, method, path string, reqBody interface{}, cookies string) (*http.Response, error) {
-	if c.timeout > 0 {
-		var cancel context.CancelFunc
-		ctx, cancel = context.WithTimeout(ctx, c.timeout)
-		defer cancel()
-	}
-
 	url := c.baseURL + path
 
 	var bodyReader io.Reader
