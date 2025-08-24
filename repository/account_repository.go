@@ -1,6 +1,9 @@
 package repository
 
 import (
+	"fmt"
+
+	"github.com/donghui12/shopee_tool_base/client/shopee"
 	"github.com/donghui12/shopee_tool_base/global"
 	"github.com/donghui12/shopee_tool_base/model"
 	"gorm.io/gorm"
@@ -66,8 +69,8 @@ func (r *AccountRepository) UpdateAccountId(id uint, accountId int64) error {
 // SaveOrUpdateAccount 保存或更新账号
 func (r *AccountRepository) SaveOrUpdateAccount(account *model.Account) error {
 	return r.db.Clauses(clause.OnConflict{
-		Columns: []clause.Column{{Name: "username"}}, // 以 username 作为唯一键
-		DoUpdates: clause.AssignmentColumns([]string{"account_id", "merchant_name",
+		Columns: []clause.Column{{Name: "account_id"}}, // 以 account_id 作为唯一键
+		DoUpdates: clause.AssignmentColumns([]string{"merchant_name", "username", "email", "phone",
 			"password", "expired_at", "cookies", "session", "status", "updated_at"}),
 	}).Create(account).Error
 }
@@ -178,8 +181,23 @@ func (s *AccountRepository) GetSession(username string) (string, error) {
 
 func (s *AccountRepository) GetSessionByUsernameAndPassword(username, password string) (string, error) {
 	var session string
-	result := s.db.Model(&model.Account{}).
-		Where("username = ? AND password = ? AND status=1", username, password).
-		Select("session").Scan(&session)
-	return session, result.Error
+
+	var field string
+	switch {
+	case shopee.IsPhone(username):
+		field = "phone"
+	case shopee.VerifyEmailFormat(username):
+		field = "email"
+	case shopee.IsMainAccount(username):
+		field = "merchant_name"
+	default:
+		field = "username"
+	}
+
+	err := s.db.Model(&model.Account{}).
+		Where(fmt.Sprintf("%s = ? AND password = ? AND status = 1", field), username, password).
+		Select("session").
+		Scan(&session).Error
+
+	return session, err
 }

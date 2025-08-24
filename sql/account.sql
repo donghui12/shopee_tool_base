@@ -22,3 +22,6 @@ CREATE TABLE IF NOT EXISTS `account` (
 
 ALTER TABLE `accounts`
 ADD COLUMN `merchant_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'shopee 账户' AFTER `account_id`;
+
+ALTER TABLE `accounts`
+ADD COLUMN `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'shopee email' AFTER `merchant_name`;

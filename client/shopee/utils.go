@@ -61,12 +61,17 @@ func formatPhone(phone string) string {
 	return phone
 }
 
-// isPhone 判断是否是手机号
-func isPhone(phone string) bool {
+// IsPhone 判断是否是手机号
+func IsPhone(phone string) bool {
 	if len(phone) != 13 {
 		return false
 	}
 	return strings.HasPrefix(phone, "86")
+}
+
+// IsPhone 判断是否是手机号
+func IsMainAccount(account string) bool {
+	return strings.Contains(":main", account)
 }
 
 // VerifyEmailFormat 验证邮箱格式

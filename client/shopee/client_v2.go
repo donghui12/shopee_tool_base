@@ -27,7 +27,7 @@ func (c *Client) LoginV2(account, password, vcode, loginType string) (string, er
 		loginParam.OtpType = EmailOptType
 	}
 
-	if isPhone(account) {
+	if IsPhone(account) {
 		loginParam.SubaccountPhone = formatPhone(account)
 	} else if VerifyEmailFormat(account) {
 		loginParam.SubaccountEmail = account
@@ -37,7 +37,7 @@ func (c *Client) LoginV2(account, password, vcode, loginType string) (string, er
 
 	// 使用新的请求管理器
 	rm := NewRequestManager(c)
-	
+
 	// 设置表单请求头
 	headers := map[string]string{
 		"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
@@ -76,7 +76,7 @@ func (c *Client) GetMerchantShopListV2(cookies string) ([]MerchantShop, error) {
 	}
 
 	rm := NewRequestManager(c)
-	
+
 	// 使用新的通用响应解析
 	data, err := DoRequestWithCommonResponse[MerchantShopListData](
 		rm,
@@ -177,10 +177,10 @@ func (c *Client) UpdateProductInfoV2(updateReq UpdateProductInfoReq) error {
 	updateReq.Cookies += "SPC_CDS=" + SPC_CDS + ";"
 
 	params := url.Values{
-		"SPC_CDS":            {SPC_CDS},
-		"SPC_CDS_VER":        {"2"},
-		"cnsc_shop_id":       {updateReq.ShopID},
-		"cbsc_shop_region":   {updateReq.Region},
+		"SPC_CDS":          {SPC_CDS},
+		"SPC_CDS_VER":      {"2"},
+		"cnsc_shop_id":     {updateReq.ShopID},
+		"cbsc_shop_region": {updateReq.Region},
 	}
 
 	req := &UpdateProductInfoRequest{

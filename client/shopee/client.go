@@ -135,7 +135,7 @@ func (c *Client) Login(account, password, vcode, loginType string) (SubAccountIn
 		loginParam.OtpType = EmailOptType
 	}
 
-	if isPhone(account) {
+	if IsPhone(account) {
 		loginParam.SubaccountPhone = formatPhone(account)
 	} else if VerifyEmailFormat(account) {
 		loginParam.SubaccountEmail = account
@@ -165,6 +165,8 @@ func (c *Client) Login(account, password, vcode, loginType string) (SubAccountIn
 	if err != nil {
 		return accountResp, fmt.Errorf("read login response failed: %w", err)
 	}
+
+	logger.Info("Body", zap.String("body:", string(body)))
 
 	// 解析响应
 	var commonResp LoginResponse
@@ -248,6 +250,7 @@ func (c *Client) GetSession(cookies string) (AccountInfo, error) {
 	if err != nil {
 		return accountInfo, fmt.Errorf("read response body failed: %w", err)
 	}
+	logger.Info("Body", zap.String("body:", string(body)))
 	err = json.Unmarshal(body, &getSessionResp)
 	if err != nil {
 		return accountInfo, fmt.Errorf("unmarshal merchant shop list response failed: %w", err)
@@ -274,6 +277,7 @@ func (c *Client) GetMerchantShopList(cookies string) ([]MerchantShop, error) {
 	if err != nil {
 		return nil, fmt.Errorf("read response body failed: %w", err)
 	}
+	logger.Info("Body", zap.String("body:", string(body)))
 	err = json.Unmarshal(body, &merchantShopListResp)
 	if err != nil {
 		return nil, fmt.Errorf("unmarshal merchant shop list response failed: %w", err)
@@ -324,6 +328,7 @@ func (c *Client) GetProductList(cookies, shopID, region, listType string) ([]int
 	if err != nil {
 		return nil, fmt.Errorf("read first page response failed: %w", err)
 	}
+	logger.Info("Body", zap.String("body:", string(body)))
 
 	var firstPageResp ProductListResponse
 	err = json.Unmarshal(body, &firstPageResp)
@@ -369,6 +374,7 @@ func (c *Client) GetProductList(cookies, shopID, region, listType string) ([]int
 					)
 					return err
 				}
+				logger.Info("Body", zap.String("body:", string(body)))
 
 				var pageResp ProductListResponse
 				if err := json.Unmarshal(body, &pageResp); err != nil {
@@ -451,6 +457,7 @@ func (c *Client) GetProductDetailList(cookies, shopID, region, listType string) 
 	if err != nil {
 		return nil, fmt.Errorf("read first page response failed: %w", err)
 	}
+	logger.Info("Body", zap.String("body:", string(body)))
 
 	var firstPageResp ProductListResponse
 	err = json.Unmarshal(body, &firstPageResp)
@@ -496,6 +503,7 @@ func (c *Client) GetProductDetailList(cookies, shopID, region, listType string) 
 					)
 					return err
 				}
+				logger.Info("Body", zap.String("body:", string(body)))
 
 				var pageResp ProductListResponse
 				if err := json.Unmarshal(body, &pageResp); err != nil {
@@ -576,6 +584,7 @@ func (c *Client) GetProductListWithDayToShip(cookies, shopID, region, listType s
 	if err != nil {
 		return nil, fmt.Errorf("read first page response failed: %w", err)
 	}
+	logger.Info("Body", zap.String("body:", string(body)))
 
 	var firstPageResp ProductDetailListResponse
 	err = json.Unmarshal(body, &firstPageResp)
@@ -615,6 +624,7 @@ func (c *Client) GetProductListWithDayToShip(cookies, shopID, region, listType s
 			)
 			continue
 		}
+		logger.Info("Body", zap.String("body:", string(body)))
 
 		var pageResp ProductDetailListResponse
 		if err := json.Unmarshal(body, &pageResp); err != nil {
@@ -684,6 +694,7 @@ func (c *Client) GetAccessTokenWithAreaTw(shopId, code, refreshToken string) (st
 	if err != nil {
 		return accessToken, newRefreshToken, expireTimeFormatted, fmt.Errorf("read first page response failed: %w", err)
 	}
+	logger.Info("Body", zap.String("body:", string(body)))
 	var currentResp TWGetAccessTokenResp
 	err = json.Unmarshal(body, &currentResp)
 	if err != nil {
@@ -746,6 +757,7 @@ func (c *Client) GetProductListWithAreaTw(accessToken, shopId string) ([]int64, 
 		if err != nil {
 			return nil, fmt.Errorf("read first page response failed: %w", err)
 		}
+		logger.Info("Body", zap.String("body:", string(body)))
 		var currentResp TWProductListResponse
 		err = json.Unmarshal(body, &currentResp)
 		if err != nil {
@@ -814,6 +826,7 @@ func (c *Client) UpdateProductInfoWithAreaTw(accessToken, shopId string, itemId 
 	if err != nil {
 		return fmt.Errorf("read first page response failed: %w", err)
 	}
+	logger.Info("Body", zap.String("body:", string(body)))
 	var currentResp TWProductUpdateResponse
 	err = json.Unmarshal(body, &currentResp)
 	if err != nil {
@@ -971,6 +984,7 @@ func (c *Client) UpdateProductInfo(updateProductInfoReq UpdateProductInfoReq) er
 	if err != nil {
 		return fmt.Errorf("read response body failed: %w", err)
 	}
+	logger.Info("Body", zap.String("body:", string(body)))
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("update product info failed, status code: %d, message: %s", resp.StatusCode, string(body))
 	}
@@ -1034,6 +1048,7 @@ func (c *Client) BatchUpdateProductInfoWithV3(updateProductInfoReq UpdateProduct
 	if err != nil {
 		return nil, fmt.Errorf("read response body failed: %w", err)
 	}
+	logger.Info("Body", zap.String("body:", string(body)))
 	if resp.StatusCode == RateLimitCode {
 		return nil, fmt.Errorf(RateLimitError)
 	}
@@ -1075,6 +1090,7 @@ func (c *Client) BatchUpdateProductInfoWithFile(updateProductInfoReq UpdateProdu
 	if err != nil {
 		return fmt.Errorf("read response body failed: %w", err)
 	}
+	logger.Info("Body", zap.String("body:", string(body)))
 	if resp.StatusCode == RateLimitCode {
 		return fmt.Errorf(RateLimitError)
 	}
@@ -1118,6 +1134,7 @@ func (c *Client) SwitchMerchantShop(cookies, region, shopId string) error {
 	if err != nil {
 		return fmt.Errorf("read response body failed: %w", err)
 	}
+	logger.Info("Body", zap.String("body:", string(body)))
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("switch_merchant_shop request failed: %s", string(body))
 	}
@@ -1152,6 +1169,7 @@ func (c *Client) GetOrSetShop(cookies string) error {
 	if err != nil {
 		return fmt.Errorf("read response body failed: %w", err)
 	}
+	logger.Info("Body", zap.String("body:", string(body)))
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("get or set shop request failed: %s", string(body))
 	}
@@ -1267,6 +1285,7 @@ func (c *Client) GetDiscountList(cookies, shopId, region string) ([]Discount, er
 		if err != nil {
 			return nil, fmt.Errorf("read response body failed: %w", err)
 		}
+		logger.Info("Body", zap.String("body:", string(body)))
 		data, err := ParseCommonResponse[DiscountList](body)
 		if err != nil {
 			return nil, err
@@ -1313,6 +1332,7 @@ func (c *Client) GetDiscountItem(cookies, shopId, region string, discountId int6
 		if err != nil {
 			return discountItemList, fmt.Errorf("read response body failed: %w", err)
 		}
+		logger.Info("Body", zap.String("body:", string(body)))
 		data, err = ParseCommonResponse[DiscountItemData](body)
 		if err != nil {
 			return discountItemList, fmt.Errorf("解析失败: %w", err)
@@ -1358,6 +1378,7 @@ func (c *Client) UpdateDiscountItem(cookies, shopId, region string, req UpdateDi
 	if err != nil {
 		return 0, fmt.Errorf("read response body failed: %w", err)
 	}
+	logger.Info("Body", zap.String("body:", string(body)))
 	data, err = ParseCommonResponse[UpdateSellerDiscountItemsResp](body)
 	if err != nil {
 		return 0, fmt.Errorf("解析失败: %w", err)
@@ -1394,6 +1415,7 @@ func (c *Client) DeleteProducts(shopId, cookies, region string, productIds []int
 	if err != nil {
 		return successfulNumber, fmt.Errorf("read response body failed: %w", err)
 	}
+	logger.Info("Body", zap.String("body:", string(body)))
 	if resp.StatusCode != http.StatusOK {
 		return successfulNumber, fmt.Errorf("delete product info failed, status code: %d, message: %s", resp.StatusCode, string(body))
 	}
@@ -1499,6 +1521,7 @@ func (c *Client) DeleteDiscounts(cookies, shopId, region string, discountID []in
 				zap.Any("折扣Id:", promotionId), zap.Error(err))
 			continue
 		}
+		logger.Info("Body", zap.String("body:", string(body)))
 
 		if resp.StatusCode != http.StatusOK {
 			logger.Error("请求状态异常: ",
@@ -1553,6 +1576,7 @@ func (c *Client) CopyCreateDiscount(cookies, shopId, region string, discount Dis
 			discount.SellerDiscount.DiscountID, err)
 		return 0, fmt.Errorf("复制创建折扣: %d, 失败: %w", discount.SellerDiscount.DiscountID, err)
 	}
+	logger.Info("Body", zap.String("body:", string(body)))
 
 	if resp.StatusCode != http.StatusOK {
 		log.Printf("请求失败: discount=%d, status=%d, body=%s",
