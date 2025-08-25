@@ -1251,7 +1251,7 @@ func (c *Client) ListedOrUnlistedProducts(shopId, cookies, region string, listSt
 }
 
 // get_discount_list
-func (c *Client) GetDiscountList(cookies, shopId, region string) ([]Discount, error) {
+func (c *Client) GetDiscountList(cookies, shopId, region string, status int) ([]Discount, error) {
 	discountList := []Discount{}
 	discountIdMap := make(map[int64]int)
 	// now := time.Now()
@@ -1263,7 +1263,7 @@ func (c *Client) GetDiscountList(cookies, shopId, region string) ([]Discount, er
 		DiscountType: 1,
 		Offset:       0,
 		Limit:        10,
-		TimeStatus:   2,
+		TimeStatus:   status,
 	}
 
 	// 构造 URL 参数
