@@ -14,6 +14,7 @@ type Account struct {
 	Username     string    `json:"username" gorm:"type:varchar(255)"`      // shopee 账户
 	Password     string    `json:"password" gorm:"type:varchar(255)"`      // shopee 密码
 	Phone        string    `json:"phone" gorm:"type:varchar(255)"`         // 手机号
+	Email        string    `json:"email" gorm:"type:varchar(255)"`         // 邮箱
 	MachineCode  string    `json:"machine_code" gorm:"type:varchar(255)"`  // 机器码
 	ActiveCode   string    `json:"active_code" gorm:"type:varchar(255)"`   // 激活码
 	ExpiredAt    string    `json:"expired_at" gorm:"type:varchar(255)"`    // 过期时间

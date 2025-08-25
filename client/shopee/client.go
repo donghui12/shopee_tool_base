@@ -230,7 +230,7 @@ func (c *Client) GetMerchantShopListWithRegion(cookies, region string) ([]Mercha
 	return shopList, nil
 }
 
-// GetMerchantShopList 获取全部地区店铺列表
+// GetSessio 获取账户配置
 func (c *Client) GetSession(cookies string) (AccountInfo, error) {
 	var accountInfo AccountInfo
 	if cookies == "" {
@@ -285,7 +285,6 @@ func (c *Client) GetMerchantShopList(cookies string) ([]MerchantShop, error) {
 	if merchantShopListResp.Error != "" {
 		return nil, fmt.Errorf("获取店铺列表失败:%s", merchantShopListResp.Error)
 	}
-	fmt.Printf("\n\nthis is shop: %+v\n", merchantShopListResp.Data.Shops)
 	return merchantShopListResp.Data.Shops, nil
 }
 
@@ -1111,7 +1110,7 @@ func (c *Client) BatchUpdateProductInfoWithFile(updateProductInfoReq UpdateProdu
 
 }
 
-// GetOrSetShop 获取或设置店铺
+// SwitchMerchantShop 切换店铺
 func (c *Client) SwitchMerchantShop(cookies, region, shopId string) error {
 	// 构造 URL 参数
 	param := CommomParam{
