@@ -154,7 +154,7 @@ func (c *Client) Login(account, password, vcode, loginType string) (SubAccountIn
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
 
 	// 执行请求
-	resp, err := c.executeWithLocalProxy(req)
+	resp, err := c.executeWithProxy(req)
 	if err != nil {
 		return accountResp, fmt.Errorf("login request failed: %w", err)
 	}
@@ -1454,7 +1454,7 @@ func (c *Client) doRequestWithProxy(method, path string, reqBody interface{}, co
 	req.Header.Set("Cookie", cookies)
 	c.setCommonHeaders(req)
 
-	resp, err := c.executeWithLocalProxy(req)
+	resp, err := c.executeWithProxy(req)
 	if err != nil {
 		return nil, fmt.Errorf("execute request failed: %w", err)
 	}
