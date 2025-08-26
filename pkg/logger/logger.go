@@ -26,7 +26,10 @@ func init() {
 	os.MkdirAll("logs", 0755)
 
 	var err error
-	log, err = config.Build(zap.AddCallerSkip(1))
+	log, err = config.Build(
+		zap.AddCallerSkip(1),
+		zap.AddStacktrace(zap.FatalLevel),
+	)
 	if err != nil {
 		panic(err)
 	}

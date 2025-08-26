@@ -69,9 +69,9 @@ func IsPhone(phone string) bool {
 	return strings.HasPrefix(phone, "86")
 }
 
-// IsPhone 判断是否是手机号
+// IsMainAccount 判断是否是账户
 func IsMainAccount(account string) bool {
-	return strings.Contains(":main", account)
+	return strings.Contains(account, ":main")
 }
 
 // VerifyEmailFormat 验证邮箱格式

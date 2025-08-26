@@ -192,6 +192,9 @@ func (c *Client) Login(account, password, vcode, loginType string) (SubAccountIn
 	if commonResp.Message == "error_name_or_password_incorrect" {
 		return accountResp, fmt.Errorf("账号或密码错误")
 	}
+	if commonResp.Message == "error_captcha_trigger" {
+		return accountResp, fmt.Errorf("请在网页端验证滑动验证码")
+	}
 	if commonResp.Message != "" {
 		return accountResp, fmt.Errorf(commonResp.Message)
 	}
@@ -840,7 +843,8 @@ func (c *Client) UpdateProductInfoWithAreaTw(accessToken, shopId string, itemId 
 	if item.DaysToShip == currentResp.Response.PreOrder.DaysToShip {
 		logger.Info("商品更新成功", zap.Int64("product_id", itemId))
 	} else {
-		logger.Error("商品更新失败", zap.Int64("product_id", itemId), zap.Any("currentResp", currentResp))
+		logger.Error("商品更新失败", zap.Int64("product_id", itemId), zap.Any("currentResp", currentResp),
+			zap.Error(err))
 	}
 
 	return nil

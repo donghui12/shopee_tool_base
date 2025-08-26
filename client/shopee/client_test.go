@@ -141,7 +141,7 @@ func TestClient_GetProductInfoListWithAreaTw(t *testing.T) {
 	shopInfoList := []int64{29076272050, 28976318873, 28877958509, 28777756753, 28776244241, 28775836504, 28527864423, 28476014973, 28427131288, 28126462353, 28125950071, 27926965997, 27926449591, 27627958449, 27627752969, 27627136075, 27427864049, 27426008882, 27425829239, 27377833725, 27377745494, 27277885959, 27126691930, 27126324359, 27027837691, 26977516589, 26975817418, 26926687443, 26877230704, 26727138958, 26577227137, 26425834082, 26076341896, 25541296785, 24591257650, 29927408216, 29826457164, 29826028466, 29777753402, 29675832473, 29627431951, 29626696467, 29427864462, 29325960336, 29077954483, 29075943590, 29027837882, 28775538512, 28727416585, 28426449238}
 	currentProductItemList, err := client.GetProductBaseInfoWithAreaTw(accessToken, shopId, shopInfoList)
 	if err != nil {
-		logger.Error("获取当前商品基础信息失败", zap.Any("商品列表", shopInfoList))
+		logger.Error("获取当前商品基础信息失败", zap.Any("商品列表", shopInfoList), zap.Error(err))
 	}
 	fmt.Print("this is response, ", currentProductItemList)
 
@@ -157,7 +157,7 @@ func TestClient_GetInactiveProducts(t *testing.T) {
 	accessToken := "SPC_CNSC_SESSION=67651aad11a61bbf0b15c7d1bfca2aa9_2_2316152;"
 	currentProductItemList, err := client.GetInactiveProducts(accessToken, shopId, "sg", 50)
 	if err != nil {
-		logger.Error("获取当前商品基础信息失败")
+		logger.Error("获取当前商品基础信息失败", zap.Error(err))
 	}
 	fmt.Print("this is response, ", currentProductItemList)
 }
