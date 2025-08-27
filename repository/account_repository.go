@@ -21,8 +21,20 @@ func NewAccountRepository() *AccountRepository {
 
 // GetAccountByUsername 根据用户名获取账号
 func (r *AccountRepository) GetAccountByUsername(username string) (*model.Account, error) {
+	var field string
+	switch {
+	case shopee.IsPhone(username):
+		field = "phone"
+	case shopee.VerifyEmailFormat(username):
+		field = "email"
+	case shopee.IsMainAccount(username):
+		field = "merchant_name"
+	default:
+		field = "username"
+	}
+
 	var account model.Account
-	err := r.db.Where("username = ?", username).First(&account).Error
+	err := r.db.Where(fmt.Sprintf("%s = ?", field), username).First(&account).Error
 	return &account, err
 }
 
@@ -126,11 +138,11 @@ func (s *AccountRepository) VerifyActiveCode(activeCode string) (string, error) 
 }
 
 func (s *AccountRepository) GetActiveCode(username string) (string, error) {
-	var activeCode string
-	result := s.db.Model(&model.Account{}).
-		Where("username = ?", username).
-		Select("active_code").Scan(&activeCode)
-	return activeCode, result.Error
+	account, err := s.GetAccountByUsername(username)
+	if err != nil {
+		return "", err
+	}
+	return account.ActiveCode, nil
 }
 
 // GetActiveCodeByUsernames 根据用户名获取激活码
