@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/donghui12/shopee_tool_base/client/shopee"
 	"github.com/donghui12/shopee_tool_base/global"
@@ -193,9 +194,11 @@ func (s *AccountRepository) GetSessionByUsernameAndPassword(username, password s
 	default:
 		field = "username"
 	}
+	currentTime := time.Now()
 
 	err := s.db.Model(&model.Account{}).
-		Where(fmt.Sprintf("%s = ? AND password = ? AND status = 1", field), username, password).
+		Where(fmt.Sprintf("%s = ? AND password = ? AND status = 1 And expired_at > ?", field),
+			username, password, currentTime).
 		Select("session").
 		Scan(&session).Error
 
