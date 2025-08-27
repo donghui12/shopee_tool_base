@@ -1288,7 +1288,6 @@ func (c *Client) GetDiscountList(cookies, shopId, region string, status int) ([]
 		if err != nil {
 			return nil, fmt.Errorf("read response body failed: %w", err)
 		}
-		logger.Info("Body", zap.String("body:", string(body)))
 		data, err := ParseCommonResponse[DiscountList](body)
 		if err != nil {
 			return nil, err
