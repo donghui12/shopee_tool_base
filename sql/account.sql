@@ -25,3 +25,34 @@ ADD COLUMN `merchant_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL 
 
 ALTER TABLE `accounts`
 ADD COLUMN `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'shopee email' AFTER `merchant_name`;
+
+
+-- 父账号表
+CREATE TABLE IF NOT EXISTS `parent_accounts` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(255) DEFAULT NULL,
+  `password` VARCHAR(255) DEFAULT NULL,
+  `phone` VARCHAR(255) DEFAULT NULL,
+  `machine_code` VARCHAR(255) DEFAULT NULL,
+  `active_code` VARCHAR(255) DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Shopee 子账号表
+CREATE TABLE IF NOT EXISTS `shopee_accounts` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `shop_id` VARCHAR(255) DEFAULT NULL,
+  `access_token` VARCHAR(255) DEFAULT NULL,
+  `refresh_token` VARCHAR(255) DEFAULT NULL,
+  `parent_account_id` BIGINT UNSIGNED NOT NULL,
+  `expired_at` VARCHAR(255) DEFAULT NULL,
+  `status` VARCHAR(50) DEFAULT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_parent_account_id` (`parent_account_id`),
+  CONSTRAINT `fk_parent_account` FOREIGN KEY (`parent_account_id`) REFERENCES `parent_accounts` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
