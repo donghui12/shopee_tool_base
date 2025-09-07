@@ -17,15 +17,15 @@ func NewShopeeAccountRepository() *ShopeeAccountRepository {
 }
 
 // GetAccounts 获取所有账号
-func (r *ShopeeAccountRepository) GetAuthShopeeAccounts() ([]model.ShopeeAccount, error) {
+func (s *ShopeeAccountRepository) GetAuthShopeeAccounts() ([]model.ShopeeAccount, error) {
 	var accounts []model.ShopeeAccount
-	err := r.db.Where("shop_id != ''").Find(&accounts).Error
+	err := s.db.Where("shop_id != ''").Find(&accounts).Error
 	return accounts, err
 }
 
 // UpdateToken 更新账号的 token, access_token, refresh_token
-func (r *ShopeeAccountRepository) RefreshToken(id int64, accessToken, refreshToken, expireTime string) error {
-	return r.db.Model(&model.ShopeeAccount{}).
+func (s *ShopeeAccountRepository) RefreshToken(id int64, accessToken, refreshToken, expireTime string) error {
+	return s.db.Model(&model.ShopeeAccount{}).
 		Where("id = ?", id).
 		Updates(map[string]interface{}{
 			"access_token":  accessToken,
@@ -76,21 +76,18 @@ func (s *ShopeeAccountRepository) IsAuth(shopId string) (string, error) {
 
 // BindParentAccount 绑定父账户
 func (s *ShopeeAccountRepository) BindParentAccount(parentAccountId int64, shopId string) error {
-	account := model.ShopeeAccount{
-		ParentAccountId: parentAccountId,
-		ShopId:          shopId,
-	}
-	// 保存到数据库, 如果账户已存在则更新
+	// 保存到数据库, 如果账户不存在则退出报错
 	var existingShopeeAccount model.ShopeeAccount
 	result := s.db.Where("shop_id = ?", shopId).First(&existingShopeeAccount)
-	if result.Error == nil {
-		existingShopeeAccount.ParentAccountId = parentAccountId
-		return s.db.Save(&existingShopeeAccount).Error
-	}
-	// 创建账户
-	result = s.db.Create(&account)
 	if result.Error != nil {
-		return fmt.Errorf("绑定父账户失败: %w", result.Error)
+		return result.Error
 	}
-	return nil
+	if existingShopeeAccount.ShopId != shopId {
+		return fmt.Errorf("shop_id 不存在: %s,请授权", shopId)
+	}
+	return s.db.Model(&model.ShopeeAccount{}).
+		Where("shop_id = ?", shopId).
+		Updates(map[string]interface{}{
+			"parent_account_id": parentAccountId,
+		}).Error
 }
